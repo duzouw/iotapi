@@ -1,0 +1,48 @@
+spring:
+  main:
+    allow-bean-definition-overriding: true
+  application:
+    name: FEBS-Gateway
+  cloud:
+    nacos:
+      config:
+        server-addr: localhost:8848
+        group: DEFAULT_GROUP
+        prefix: febs-gateway
+        file-extension: yaml
+      discovery:
+        server-addr: localhost:8848
+    sentinel:
+      transport:
+        dashboard: localhost:8080 #配置Sentinel dashboard地址
+        port: 8719
+      datasource:
+        ds1:
+          nacos:
+            server-addr: ${spring.cloud.nacos.config.server-addr}  #nacos地址，根据实际配置
+            dataId: ${spring.application.name}-flow-rules  #规则配置 dataId 参见： dashboard 的 NacosConfigUtil.java 源码
+            groupId: SENTINEL_GROUP   #规则的groupId  参见： dashboard 的 NacosConfigUtil.java 源码
+            rule-type: flow    #规则类型
+  boot:
+    admin:
+      client:
+        instance:
+          prefer-ip: true
+
+logging:
+  level:
+    org:
+      springframework:
+        boot:
+          actuate:
+            endpoint:
+              EndpointId: error
+        data:
+          convert:
+            CustomConversions: error
+    com:
+      alibaba:
+        cloud:
+          nacos:
+            client:
+              NacosPropertySourceBuilder: error

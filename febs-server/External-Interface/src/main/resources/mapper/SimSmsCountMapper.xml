@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jm.api.manage.mapper.SimSmsCountMapper">
+    <select id="countSms" resultType="com.jm.api.manage.entity.SimSmsCount">
+        SELECT
+        UP_PHONE AS msisdn,
+        COUNT(UP_PHONE) AS smsAmount
+        FROM
+        sms_reply_log
+        <where>
+
+            AND  UP_RECEIVE_TIME &gt;= #{kaishi}
+            AND UP_RECEIVE_TIME &lt;= #{jieshu}
+
+            <if test="ids != null and ids.size() > 0">
+                AND UP_PHONE IN
+                <foreach collection="ids" item="index" open="(" separator="," close=")">
+                    #{index}
+                </foreach>
+            </if>
+        </where>
+        GROUP BY UP_PHONE
+    </select>
+</mapper>

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jm.api.manage.mapper.DiscountInfoMapper">
+    <select id="findClientId" resultType="com.jm.api.manage.entity.DiscountInfo">
+        SELECT
+            IOT_ID AS iotId,
+            CLIENT_ID AS clientId,
+            COUNT(IOT_ID) AS total
+        FROM
+            iot_discount_info
+            WHERE
+                <if test="ids != null and ids.size() > 0">
+                    IOT_ID IN
+                    <foreach collection="ids" item="index" open="(" separator="," close=")">
+                        #{index}
+                    </foreach>
+                </if>
+        GROUP BY IOT_ID
+    </select>
+
+
+
+    <select id="findClientOne" resultType="com.jm.api.manage.entity.DiscountInfo">
+        SELECT
+            IOT_ID AS iotId,
+            CLIENT_ID AS clientId,
+            COUNT(IOT_ID) AS total
+        FROM
+            iot_discount_info
+        WHERE IOT_ID = #{param1}
+        GROUP BY IOT_ID
+    </select>
+</mapper>

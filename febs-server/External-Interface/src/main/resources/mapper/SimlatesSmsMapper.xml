@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jm.api.manage.mapper.SimlatesSmsMapper">
+    <select id="latestSms" resultType="com.jm.api.manage.entity.SimlatesSms">
+        SELECT
+	        b.UP_PHONE AS msisdn,
+	        b.UP_TEXT AS upTest
+        FROM
+	    ( SELECT MAX( UP_ID ) id, UP_PHONE FROM sms_reply_log
+        <where>
+            <if test="ids != null and ids.size() > 0">
+                UP_PHONE IN
+                <foreach collection="ids" item="index" open="(" separator="," close=")">
+                    #{index}
+                </foreach>
+            </if>
+        </where>
+	     GROUP BY UP_PHONE ) a
+	    LEFT JOIN sms_reply_log b ON a.id = b.UP_ID
+    </select>
+</mapper>
